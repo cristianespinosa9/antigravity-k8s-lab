@@ -1,5 +1,5 @@
 global:
-  storageClass: "local-path" # Adjust for K3s default
+  storageClass: "manual" # Explicitly match our manual PVs
   postgresql:
     auth:
       postgresPassword: "adminpassword"
