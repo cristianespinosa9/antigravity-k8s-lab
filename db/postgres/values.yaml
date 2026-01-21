@@ -1,0 +1,46 @@
+global:
+  storageClass: "local-path" # Adjust for K3s default
+  postgresql:
+    auth:
+      postgresPassword: "adminpassword"
+      username: "app_user"
+      password: "app_password"
+      database: "users_db" 
+
+architecture: replication
+readReplicas:
+  replicaCount: 1
+
+primary:
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  persistence:
+    enabled: true
+    size: 1Gi
+
+readReplicas:
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  persistence:
+    enabled: true
+    size: 1Gi
+
+# Init scripts to create both DBs
+primary:
+  initdb:
+    scripts:
+      create_second_db.sh: |
+        #!/bin/bash
+        export PGPASSWORD=$POSTGRES_PASSWORD
+        psql -U postgres -c "CREATE DATABASE orders_db;"
+        psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE orders_db TO app_user;"

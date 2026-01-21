@@ -1,0 +1,130 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-service
+  namespace: k8s-lab-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: users-service
+  template:
+    metadata:
+      labels:
+        app: users-service
+    spec:
+      containers:
+      - name: users-service
+        image: antigravity/users-service:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://app_user:app_password@postgres-postgresql.k8s-lab-app.svc.cluster.local:5432/users_db"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "250m"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-service
+  namespace: k8s-lab-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: orders-service
+  template:
+    metadata:
+      labels:
+        app: orders-service
+    spec:
+      containers:
+      - name: orders-service
+        image: antigravity/orders-service:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://app_user:app_password@postgres-postgresql.k8s-lab-app.svc.cluster.local:5432/orders_db"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "250m"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-api
+  namespace: k8s-lab-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gateway-api
+  template:
+    metadata:
+      labels:
+        app: gateway-api
+    spec:
+      containers:
+      - name: gateway-api
+        image: antigravity/gateway-api:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: USERS_SERVICE_URL
+          value: "http://users-service"
+        - name: ORDERS_SERVICE_URL
+          value: "http://orders-service"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "250m"

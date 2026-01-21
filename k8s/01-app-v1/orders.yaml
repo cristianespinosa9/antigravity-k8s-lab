@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-service
+  namespace: k8s-lab-app
+  labels:
+    app: orders-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orders-service
+  template:
+    metadata:
+      labels:
+        app: orders-service
+    spec:
+      containers:
+      - name: orders-service
+        image: antigravity/orders-service:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://app_user:app_password@postgres-postgresql.k8s-lab-app.svc.cluster.local:5432/orders_db"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orders-service
+  namespace: k8s-lab-app
+spec:
+  selector:
+    app: orders-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: ClusterIP

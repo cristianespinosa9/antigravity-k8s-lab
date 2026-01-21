@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-service-vault
+  namespace: k8s-lab-app
+spec:
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "app-role"
+        vault.hashicorp.com/agent-inject-secret-config: "secret/data/app-config"
+        vault.hashicorp.com/agent-inject-template-config: |
+          {{With secret "secret/data/app-config" -}}
+            export DATABASE_URL="{{ .Data.data.database_url }}"
+          {{- end }}
+    spec:
+      serviceAccountName: default
+      containers:
+      - name: users-service
+        image: antigravity/users-service:latest
+        command: ["/bin/sh", "-c"]
+        args: ["source /vault/secrets/config && uvicorn main:app --host 0.0.0.0"]

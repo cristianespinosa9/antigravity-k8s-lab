@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k8s-lab-app
+  labels:
+    name: k8s-lab-app
+    istio-injection: enabled
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k8s-lab-monitoring
+  labels:
+    name: k8s-lab-monitoring
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k8s-lab-security
+  labels:
+    name: k8s-lab-security

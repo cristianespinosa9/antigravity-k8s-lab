@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-api
+  namespace: k8s-lab-app
+  labels:
+    app: gateway-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-api
+  template:
+    metadata:
+      labels:
+        app: gateway-api
+    spec:
+      containers:
+      - name: gateway-api
+        image: antigravity/gateway-api:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        env:
+        - name: USERS_SERVICE_URL
+          value: "http://users-service"
+        - name: ORDERS_SERVICE_URL
+          value: "http://orders-service"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-api
+  namespace: k8s-lab-app
+spec:
+  selector:
+    app: gateway-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: ClusterIP

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-service
+  namespace: k8s-lab-app
+  labels:
+    app: users-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users-service
+  template:
+    metadata:
+      labels:
+        app: users-service
+    spec:
+      containers:
+      - name: users-service
+        image: antigravity/users-service:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://app_user:app_password@postgres-postgresql.k8s-lab-app.svc.cluster.local:5432/users_db"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: users-service
+  namespace: k8s-lab-app
+spec:
+  selector:
+    app: users-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: ClusterIP

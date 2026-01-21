@@ -1,0 +1,32 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: users-pdb
+  namespace: k8s-lab-app
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: users-service
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: orders-pdb
+  namespace: k8s-lab-app
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: orders-service
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: gateway-pdb
+  namespace: k8s-lab-app
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: gateway-api
