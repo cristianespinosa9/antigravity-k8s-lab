@@ -12,6 +12,9 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: "/mnt/data/postgres-primary"
+  claimRef:
+    namespace: k8s-lab-app
+    name: data-postgres-postgresql-primary-0
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -27,3 +30,6 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: "/mnt/data/postgres-read"
+  claimRef:
+    namespace: k8s-lab-app
+    name: data-postgres-postgresql-read-0

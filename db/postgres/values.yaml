@@ -8,8 +8,11 @@ global:
       database: "users_db" 
 
 architecture: replication
+primary:
+  podAntiAffinityPreset: soft
 readReplicas:
   replicaCount: 1
+  podAntiAffinityPreset: soft
 
 primary:
   resources:
