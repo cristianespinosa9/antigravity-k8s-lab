@@ -8,9 +8,10 @@ volumeBindingMode: WaitForFirstConsumer
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: postgres-primary-pv
+  name: 01-postgres-primary-pv
   labels:
     type: local
+    role: primary
 spec:
   storageClassName: "manual"
   capacity:
@@ -23,9 +24,10 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: postgres-read-pv
+  name: 02-postgres-read-pv
   labels:
     type: local
+    role: read
 spec:
   storageClassName: "manual"
   capacity:
