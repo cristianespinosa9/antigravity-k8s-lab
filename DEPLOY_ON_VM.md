@@ -72,6 +72,27 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install postgres bitnami/postgresql -f db/postgres/values.yaml -n k8s-lab-app
 ```
 
+
+## Paso 3.1: Reset de Almacenamiento (Si los pods están Pending)
+Si ves que `postgres-postgresql-primary-0` se queda en `Pending`, es probable que haya un conflicto con volúmenes viejos. Ejecuta esto para limpiar todo y empezar de cero con la base de datos:
+
+```bash
+# 1. Borrar la instalación actual de Postgres
+helm uninstall postgres -n k8s-lab-app
+
+# 2. Borrar los PVCs y PVs
+kubectl delete pvc -n k8s-lab-app data-postgres-postgresql-primary-0 data-postgres-postgresql-read-0
+kubectl delete pv postgres-primary-pv postgres-read-pv
+
+# 3. Limpiar directorios en la VM
+sudo rm -rf /mnt/data/postgres-primary/*
+sudo rm -rf /mnt/data/postgres-read/*
+
+# 4. Re-aplicar storage y chart
+kubectl apply -f k8s/00-namespaces/fix-storage.yaml
+helm install postgres bitnami/postgresql -f db/postgres/values.yaml -n k8s-lab-app
+```
+
 ## Paso 4: Despliegue Fase 1 (Aplicación)
 ```bash
 kubectl apply -f k8s/01-app-v1
