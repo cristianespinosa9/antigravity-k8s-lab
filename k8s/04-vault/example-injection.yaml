@@ -19,6 +19,6 @@ spec:
       serviceAccountName: default
       containers:
       - name: users-service
-        image: antigravity/users-service:latest
+        image: cristiane89/users-service:latest
         command: ["/bin/sh", "-c"]
         args: ["source /vault/secrets/config && uvicorn main:app --host 0.0.0.0"]

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: orders-service
-        image: antigravity/orders-service:latest
+        image: cristiane89/orders-service:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000

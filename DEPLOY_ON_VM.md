@@ -29,32 +29,38 @@ Opción B: Construirlas localmente (si usas K3s es automático, con K8s estánda
 
 **Vamos con la Opción A (Docker Hub)**:
 1.  Loguéate: `docker login`
-2.  Construye y sube cada servicio (reemplaza `TU_USUARIO_DOCKER`):
+2.  Construye y sube cada servicio (reemplaza `cristiane89`):
 
     ```bash
     # Users Service
-    docker build -t TU_USUARIO_DOCKER/users-service:latest -f docker/Dockerfile.users .
-    docker push TU_USUARIO_DOCKER/users-service:latest
+    docker build -t cristiane89/users-service:latest -f docker/Dockerfile.users .
+    docker push cristiane89/users-service:latest
 
     # Orders Service
-    docker build -t TU_USUARIO_DOCKER/orders-service:latest -f docker/Dockerfile.orders .
-    docker push TU_USUARIO_DOCKER/orders-service:latest
+    docker build -t cristiane89/orders-service:latest -f docker/Dockerfile.orders .
+    docker push cristiane89/orders-service:latest
 
     # Gateway API
-    docker build -t TU_USUARIO_DOCKER/gateway-api:latest -f docker/Dockerfile.gateway .
-    docker push TU_USUARIO_DOCKER/gateway-api:latest
+    docker build -t cristiane89/gateway-api:latest -f docker/Dockerfile.gateway .
+    docker push cristiane89/gateway-api:latest
 
     # Web App
-    docker build -t TU_USUARIO_DOCKER/web-app:latest -f docker/Dockerfile.frontend .
-    docker push TU_USUARIO_DOCKER/web-app:latest
+    docker build -t cristiane89/web-app:latest -f docker/Dockerfile.frontend .
+    docker push cristiane89/web-app:latest
     ```
 
-**IMPORTANTE**: Debes actualizar los manifiestos en `k8s/01-app-v1/*.yaml` para usar `image: TU_USUARIO_DOCKER/users-service:latest`, etc. en lugar de `antigravity/...`.
-Puedes hacerlo rápido con `sed` en la VM:
-```bash
-sed -i 's|antigravity/|TU_USUARIO_DOCKER/|g' k8s/01-app-v1/*.yaml
-sed -i 's|antigravity/|TU_USUARIO_DOCKER/|g' k8s/03-ha/*.yaml
-```
+**IMPORTANTE**: Debes actualizar los manifiestos en `k8s/01-app-v1/*.yaml` para usar `image: cristiane89/users-service:latest`, etc. en lugar de `antigravity/...`.
+
+### Solución de Problemas de Red (Docker Build Fails)
+Si ves errores como `TLS handshake timeout` o `failed to resolve source metadata` al hacer build:
+1. Probablemente sea un problema de DNS en tu VM.
+2. Edita `/etc/resolv.conf` y agrega `nameserver 8.8.8.8`:
+   ```bash
+   echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
+   sudo systemctl restart docker
+   ```
+3. Si persiste, prueba reiniciando el servicio de Docker o revisando la conexión a internet (`ping google.com`).
+
 
 ## Paso 3: Despliegue Fase 0 (Base)
 ```bash

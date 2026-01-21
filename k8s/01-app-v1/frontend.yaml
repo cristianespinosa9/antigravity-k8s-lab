@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: web-app
-        image: antigravity/web-app:latest
+        image: cristiane89/web-app:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80

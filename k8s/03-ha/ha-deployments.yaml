@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: users-service
-        image: antigravity/users-service:latest
+        image: cristiane89/users-service:latest
         ports:
         - containerPort: 8000
         env:
@@ -58,7 +58,7 @@ spec:
     spec:
       containers:
       - name: orders-service
-        image: antigravity/orders-service:latest
+        image: cristiane89/orders-service:latest
         ports:
         - containerPort: 8000
         env:
@@ -101,7 +101,7 @@ spec:
     spec:
       containers:
       - name: gateway-api
-        image: antigravity/gateway-api:latest
+        image: cristiane89/gateway-api:latest
         ports:
         - containerPort: 8000
         env:

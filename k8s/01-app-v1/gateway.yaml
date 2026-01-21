@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: gateway-api
-        image: antigravity/gateway-api:latest
+        image: cristiane89/gateway-api:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000

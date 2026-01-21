@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: users-service
-        image: antigravity/users-service:latest
+        image: cristiane89/users-service:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
